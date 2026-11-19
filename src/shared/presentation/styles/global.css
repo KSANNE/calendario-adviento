@@ -1,0 +1,1379 @@
+/* Paleta naranja butano/pelirrojo: del melocotón claro al naranja butano, y un marrón rojizo para el texto.
+   Para cambiar de paleta basta con tocar este bloque. */
+:root {
+  --tone-50: #fff5ef;
+  --tone-100: #ffe6d9;
+  --tone-200: #ffd0b8;
+  --tone-300: #ffb48f;
+  --tone-400: #ff9562;
+  --tone-500: #f9763a;
+  --tone-600: #ea5e22;
+  --tone-700: #c84a17;
+  --tone-800: #9c3810;
+  --ink: #6e2a0e;
+  --ink-soft: #9a4a26;
+  --white: #ffffff;
+
+  /* Acierto y fallo (test y crucigrama). */
+  --ok: #2e9a55;
+  --ok-soft: #e3f6e9;
+  --bad: #d8443a;
+  --bad-soft: #fde6e3;
+
+  /* Los mismos colores en formato "r g b" para usarlos con transparencia. */
+  --shadow-rgb: 200 74 23;
+  --accent-rgb: 249 118 58;
+  --glow-rgb: 234 94 34;
+  --backdrop-rgb: 255 208 184;
+
+  /* Un tono por puerta (se reparten con door-decor.util). */
+  --shade-0: #ffdccb;
+  --shade-1: #ffc6a9;
+  --shade-2: #ffb08a;
+  --shade-3: #ffbf9f;
+  --shade-4: #ff9e70;
+  --shade-5: #f98a59;
+
+  --font-body: 'Fredoka Variable', 'Fredoka', ui-rounded, 'SF Pro Rounded', system-ui, sans-serif;
+  --font-script: 'Pacifico', 'Snell Roundhand', cursive;
+  --radius: 22px;
+  --shadow: 0 2px 0 rgb(var(--shadow-rgb) / 0.08), 0 10px 30px rgb(var(--shadow-rgb) / 0.14);
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+  color-scheme: light;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  min-height: 100%;
+}
+
+body {
+  font-family: var(--font-body);
+  color: var(--ink);
+  background-color: var(--tone-100);
+  /* Lunares suaves sobre un degradado naranja. */
+  background-image:
+    radial-gradient(circle, rgb(255 255 255 / 0.7) 2px, transparent 2.5px),
+    radial-gradient(circle, rgb(var(--accent-rgb) / 0.18) 2px, transparent 2.5px),
+    radial-gradient(120% 80% at 50% 0%, var(--tone-50) 0%, var(--tone-200) 70%, var(--tone-300) 100%);
+  background-size:
+    28px 28px,
+    28px 28px,
+    100% 100%;
+  background-position:
+    0 0,
+    14px 14px,
+    0 0;
+  background-attachment: fixed;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-font-smoothing: antialiased;
+}
+
+button,
+input {
+  font: inherit;
+  color: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+.shade-0 {
+  --door: var(--shade-0);
+}
+.shade-1 {
+  --door: var(--shade-1);
+}
+.shade-2 {
+  --door: var(--shade-2);
+}
+.shade-3 {
+  --door: var(--shade-3);
+}
+.shade-4 {
+  --door: var(--shade-4);
+}
+.shade-5 {
+  --door: var(--shade-5);
+}
+.shade-text-0 {
+  color: var(--tone-400);
+}
+.shade-text-1 {
+  color: var(--tone-500);
+}
+.shade-text-2 {
+  color: var(--white);
+}
+.shade-text-3 {
+  color: var(--tone-600);
+}
+
+/* ---------- Fondo animado ---------- */
+
+.floating-decor {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.floating-decor__item {
+  position: absolute;
+  top: -40px;
+  opacity: 0.75;
+  animation-name: drift;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  filter: drop-shadow(0 2px 2px rgb(var(--shadow-rgb) / 0.15));
+}
+
+@keyframes drift {
+  0% {
+    transform: translate3d(0, -5vh, 0) rotate(0deg);
+  }
+  50% {
+    transform: translate3d(18px, 55vh, 0) rotate(160deg);
+  }
+  100% {
+    transform: translate3d(-10px, 115vh, 0) rotate(320deg);
+  }
+}
+
+/* ---------- Estructura ---------- */
+
+#root {
+  position: relative;
+  z-index: 1;
+}
+
+.page,
+.login {
+  width: min(100%, 480px);
+  margin: 0 auto;
+  padding: calc(var(--safe-top) + 24px) 16px calc(var(--safe-bottom) + 32px);
+}
+
+.page--center,
+.login {
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+}
+
+.card {
+  background: rgb(255 255 255 / 0.82);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 2px solid var(--white);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 20px;
+}
+
+.eyebrow {
+  margin: 0;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--tone-700);
+}
+
+.script-title {
+  margin: 4px 0 0;
+  font-family: var(--font-script);
+  font-weight: 400;
+  font-size: clamp(2.3rem, 11vw, 3rem);
+  line-height: 1.25;
+  color: var(--tone-700);
+  text-shadow:
+    0 3px 0 var(--white),
+    0 6px 14px rgb(var(--shadow-rgb) / 0.25);
+}
+
+.cute-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  min-height: 52px;
+  padding: 12px 24px;
+  border: none;
+  border-radius: 999px;
+  background: linear-gradient(180deg, var(--tone-600), var(--tone-700));
+  color: var(--white);
+  font-weight: 600;
+  font-size: 1.1rem;
+  box-shadow:
+    0 4px 0 var(--tone-800),
+    0 10px 20px rgb(var(--shadow-rgb) / 0.3);
+  transition:
+    transform 0.12s ease,
+    box-shadow 0.12s ease;
+}
+
+.cute-button:active:not(:disabled) {
+  transform: translateY(3px);
+  box-shadow:
+    0 1px 0 var(--tone-800),
+    0 5px 12px rgb(var(--shadow-rgb) / 0.3);
+}
+
+.cute-button:focus-visible {
+  outline: 3px solid var(--tone-300);
+  outline-offset: 3px;
+}
+
+.cute-button:disabled {
+  opacity: 0.75;
+  cursor: progress;
+}
+
+.link-button {
+  border: none;
+  background: none;
+  color: var(--ink-soft);
+  font-weight: 500;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  padding: 8px;
+}
+
+.loading-flake {
+  color: var(--tone-600);
+  animation: spin 2.4s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Destello que se enciende y se apaga, como una lucecita. */
+@keyframes twinkle {
+  0%,
+  100% {
+    transform: scale(1) rotate(0deg);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(0.75) rotate(20deg);
+    opacity: 0.6;
+  }
+}
+
+/* ---------- Login ---------- */
+
+.login__card {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  text-align: center;
+  background: rgb(255 255 255 / 0.86);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 2px solid var(--white);
+  border-radius: 30px;
+  box-shadow: var(--shadow);
+  padding: 36px 22px 26px;
+}
+
+.login__card.is-wrong {
+  animation: shake 0.45s ease;
+}
+
+.login__badge {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 96px;
+  height: 96px;
+  margin-top: -84px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, var(--tone-50), var(--tone-300));
+  border: 4px solid var(--white);
+  box-shadow: var(--shadow);
+}
+
+.login__gift {
+  color: var(--tone-600);
+  animation: wiggle 2.6s ease-in-out infinite;
+}
+
+.login__bow {
+  position: absolute;
+  top: -14px;
+  right: -6px;
+  color: var(--tone-500);
+  transform: rotate(18deg);
+}
+
+.login__intro {
+  margin: 0 0 6px;
+  color: var(--ink-soft);
+  line-height: 1.45;
+}
+
+.login__error {
+  margin: 0;
+  padding: 8px 14px;
+  border-radius: 14px;
+  background: var(--tone-100);
+  color: var(--tone-700);
+  font-weight: 500;
+}
+
+.field {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  text-align: left;
+}
+
+.field__label {
+  padding-left: 14px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--ink-soft);
+}
+
+.field__input {
+  width: 100%;
+  min-height: 50px;
+  padding: 12px 18px;
+  border: 2px solid var(--tone-200);
+  border-radius: 999px;
+  background: var(--tone-50);
+  /* 16px como mínimo: así el iPhone no hace zoom al tocar el campo. */
+  font-size: 1rem;
+  outline: none;
+  transition:
+    border-color 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.field__input::placeholder {
+  color: var(--tone-400);
+}
+
+.field__input:focus {
+  border-color: var(--tone-500);
+  box-shadow: 0 0 0 4px rgb(var(--accent-rgb) / 0.25);
+}
+
+/* ---------- Calendario ---------- */
+
+.hero {
+  text-align: center;
+  margin-bottom: 18px;
+}
+
+.hero__sparkle {
+  vertical-align: 4px;
+  color: var(--tone-500);
+  animation: twinkle 2.2s ease-in-out infinite;
+}
+
+.banner {
+  position: relative;
+  text-align: center;
+  margin-bottom: 22px;
+}
+
+.banner--compact {
+  padding: 14px 18px;
+}
+
+.banner__sparkle {
+  position: absolute;
+  top: 12px;
+  right: 14px;
+  color: var(--tone-400);
+}
+
+.banner__title {
+  margin: 0;
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--tone-700);
+}
+
+.banner__message {
+  margin: 8px 0 0;
+  line-height: 1.5;
+  white-space: pre-line;
+  color: var(--ink);
+}
+
+.banner__caption {
+  margin: 12px 0 0;
+  font-size: 0.95rem;
+  color: var(--ink-soft);
+}
+
+.banner--compact .banner__caption {
+  margin-top: 4px;
+}
+
+.countdown {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.countdown__bubble {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 12px 4px 10px;
+  border-radius: 20px;
+  background: var(--door);
+  border: 2px solid var(--white);
+  box-shadow: inset 0 -4px 0 rgb(var(--shadow-rgb) / 0.12);
+}
+
+.countdown__value {
+  font-size: clamp(1.6rem, 8vw, 2.1rem);
+  font-weight: 700;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink);
+}
+
+.countdown__label {
+  margin-top: 4px;
+  font-size: 0.78rem;
+  font-weight: 500;
+  color: var(--ink-soft);
+}
+
+.countdown-small {
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: var(--tone-700);
+}
+
+.door-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  padding: 12px;
+  border-radius: 28px;
+  background: rgb(255 255 255 / 0.55);
+  border: 2px dashed var(--tone-300);
+}
+
+.door {
+  position: relative;
+  aspect-ratio: 4 / 5;
+  padding: 0;
+  border: none;
+  border-radius: 18px;
+  background: transparent;
+  perspective: 600px;
+}
+
+.door:focus-visible {
+  outline: 3px solid var(--tone-600);
+  outline-offset: 3px;
+}
+
+/* Lo que se ve detrás de la puerta cuando se abre. */
+.door__inside {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  border-radius: 18px;
+  background: radial-gradient(circle at 50% 45%, var(--white), var(--tone-200));
+  box-shadow: inset 0 3px 8px rgb(var(--shadow-rgb) / 0.25);
+  color: var(--tone-600);
+}
+
+.door__panel {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 18px;
+  background:
+    radial-gradient(circle at 30% 20%, rgb(255 255 255 / 0.6), transparent 55%), var(--door, var(--shade-0));
+  border: 2px solid var(--white);
+  box-shadow:
+    inset 0 -5px 0 rgb(var(--shadow-rgb) / 0.13),
+    0 4px 10px rgb(var(--shadow-rgb) / 0.16);
+  transform-origin: left center;
+  transition: transform 0.7s cubic-bezier(0.3, 1.4, 0.5, 1);
+  backface-visibility: hidden;
+}
+
+/* Costura blanca alrededor de la puerta, como de tela. */
+.door__panel::before {
+  content: '';
+  position: absolute;
+  inset: 5px;
+  border-radius: 13px;
+  border: 1.5px dashed rgb(255 255 255 / 0.9);
+}
+
+.door__number {
+  position: relative;
+  font-size: clamp(1.5rem, 7vw, 1.9rem);
+  font-weight: 700;
+  color: var(--ink);
+  text-shadow: 0 2px 0 rgb(255 255 255 / 0.7);
+}
+
+.door__decor {
+  position: absolute;
+  top: 9px;
+  right: 9px;
+  color: var(--white);
+  filter: drop-shadow(0 1px 1px rgb(var(--shadow-rgb) / 0.3));
+}
+
+.door__lock {
+  position: absolute;
+  bottom: 9px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: var(--ink-soft);
+  opacity: 0.55;
+}
+
+.door__knob {
+  position: absolute;
+  right: 9px;
+  top: 50%;
+  width: 7px;
+  height: 7px;
+  margin-top: -3.5px;
+  border-radius: 50%;
+  background: var(--white);
+  box-shadow: 0 1px 2px rgb(var(--shadow-rgb) / 0.35);
+}
+
+.door--locked .door__number {
+  opacity: 0.8;
+}
+
+.door.is-open .door__panel {
+  transform: rotateY(-72deg);
+}
+
+.door--opened .door__inside {
+  animation: none;
+}
+
+.door--today:not(.is-open) .door__panel {
+  animation: wiggle 2.6s ease-in-out infinite;
+  box-shadow:
+    inset 0 -5px 0 rgb(var(--shadow-rgb) / 0.13),
+    0 0 0 3px var(--tone-500),
+    0 0 18px 4px rgb(var(--glow-rgb) / 0.55);
+}
+
+@keyframes wiggle {
+  0%,
+  70%,
+  100% {
+    transform: rotate(0deg);
+  }
+  75% {
+    transform: rotate(-4deg);
+  }
+  80% {
+    transform: rotate(4deg);
+  }
+  85% {
+    transform: rotate(-3deg);
+  }
+  90% {
+    transform: rotate(2deg);
+  }
+}
+
+.door__ribbon {
+  position: absolute;
+  top: -9px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 2px 10px;
+  border-radius: 999px;
+  background: var(--tone-600);
+  color: var(--white);
+  font-size: 0.72rem;
+  font-weight: 600;
+  white-space: nowrap;
+  box-shadow: 0 3px 8px rgb(var(--shadow-rgb) / 0.35);
+  z-index: 2;
+}
+
+/* Puerta de un día pasado que todavía no se ha abierto. */
+.door__dot {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--tone-600);
+  border: 2px solid var(--white);
+  z-index: 2;
+}
+
+.door.is-shaking {
+  animation: shake 0.45s ease;
+}
+
+@keyframes shake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  20% {
+    transform: translateX(-6px);
+  }
+  40% {
+    transform: translateX(6px);
+  }
+  60% {
+    transform: translateX(-4px);
+  }
+  80% {
+    transform: translateX(3px);
+  }
+}
+
+.page__footer {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.toast {
+  position: fixed;
+  left: 50%;
+  bottom: calc(var(--safe-bottom) + 24px);
+  transform: translateX(-50%);
+  max-width: calc(100% - 32px);
+  padding: 12px 20px;
+  border-radius: 999px;
+  background: var(--white);
+  color: var(--tone-700);
+  font-weight: 600;
+  box-shadow: var(--shadow);
+  border: 2px solid var(--tone-200);
+  z-index: 20;
+  animation: pop-in 0.3s cubic-bezier(0.3, 1.5, 0.5, 1);
+  text-align: center;
+}
+
+/* ---------- Sorpresa ---------- */
+
+.sheet-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 30;
+  display: grid;
+  place-items: center;
+  padding: 24px 16px;
+  background: rgb(var(--backdrop-rgb) / 0.6);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  animation: fade-in 0.25s ease;
+}
+
+.surprise {
+  position: relative;
+  width: min(100%, 420px);
+  padding: 0;
+  text-align: center;
+  background: linear-gradient(180deg, var(--white), var(--tone-50));
+  border: 3px solid var(--white);
+  border-radius: 30px;
+  box-shadow:
+    0 0 0 6px var(--tone-200),
+    0 20px 50px rgb(var(--shadow-rgb) / 0.35);
+  animation: pop-in 0.45s cubic-bezier(0.3, 1.5, 0.5, 1);
+}
+
+.surprise__bow {
+  position: absolute;
+  top: -34px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: var(--tone-500);
+  filter: drop-shadow(0 4px 6px rgb(var(--shadow-rgb) / 0.3));
+}
+
+.surprise__sparkle {
+  position: absolute;
+  color: var(--tone-400);
+}
+
+.surprise__sparkle--left {
+  top: 22px;
+  left: 22px;
+}
+
+.surprise__sparkle--right {
+  top: 52px;
+  right: 28px;
+}
+
+.surprise__day {
+  margin: 0;
+  font-family: var(--font-script);
+  font-size: 1.6rem;
+  color: var(--tone-600);
+}
+
+.surprise__title {
+  margin: 6px 0 0;
+  font-size: 1.35rem;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+/* Lo de dentro se desplaza si no cabe; el lazo queda fuera para que no se corte. */
+.surprise__scroll {
+  position: relative;
+  max-height: calc(100dvh - 90px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 44px 20px 22px;
+  border-radius: 27px;
+}
+
+.surprise__subtitle {
+  margin: 4px 0 0;
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: var(--ink-soft);
+}
+
+.surprise__body:not(:empty) {
+  margin: 16px 0 20px;
+}
+
+.surprise__closing {
+  margin: 0 0 18px;
+  font-family: var(--font-script);
+  font-size: 1.25rem;
+  color: var(--tone-700);
+}
+
+.surprise__error {
+  margin: 0 0 14px;
+  color: var(--bad);
+  font-weight: 500;
+}
+
+.surprise__message {
+  margin: 14px 0 22px;
+  line-height: 1.55;
+  white-space: pre-line;
+  color: var(--ink);
+}
+
+@keyframes pop-in {
+  from {
+    opacity: 0;
+    transform: translateX(var(--pop-x, 0)) scale(0.85);
+  }
+}
+
+.toast {
+  --pop-x: -50%;
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  .floating-decor {
+    display: none;
+  }
+}
+
+/* ---------- Botones pequeños ---------- */
+
+.cute-button--small {
+  width: auto;
+  min-height: 44px;
+  padding: 10px 22px;
+  font-size: 1rem;
+}
+
+.cute-button--soft {
+  background: var(--tone-100);
+  color: var(--tone-800);
+  box-shadow:
+    0 3px 0 var(--tone-300),
+    0 6px 14px rgb(var(--shadow-rgb) / 0.15);
+}
+
+/* ---------- Aviso de pantalla de inicio ---------- */
+
+.install-hint {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin-bottom: 18px;
+  padding: 14px 16px;
+  text-align: left;
+}
+
+.install-hint__icon {
+  flex: none;
+  margin-top: 2px;
+  color: var(--tone-500);
+}
+
+.install-hint__text {
+  margin: 0;
+  font-size: 0.92rem;
+  line-height: 1.45;
+}
+
+.install-hint__close {
+  flex: none;
+  padding: 2px 4px;
+  font-weight: 600;
+}
+
+/* ---------- Canción ---------- */
+
+.song {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.song__player {
+  display: block;
+  width: 100%;
+  border: 0;
+  border-radius: 14px;
+  background: var(--tone-100);
+}
+
+.song__link {
+  color: var(--tone-700);
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+/* ---------- Pregunta ---------- */
+
+.question__text {
+  margin: 0 0 14px;
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: var(--tone-700);
+}
+
+.question__form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.question__input {
+  width: 100%;
+  resize: vertical;
+  min-height: 110px;
+  padding: 14px 16px;
+  border: 2px solid var(--tone-200);
+  border-radius: 18px;
+  background: var(--white);
+  font: inherit;
+  font-size: 1rem;
+  line-height: 1.45;
+  color: var(--ink);
+  outline: none;
+}
+
+.question__input:focus {
+  border-color: var(--tone-500);
+  box-shadow: 0 0 0 4px rgb(var(--accent-rgb) / 0.25);
+}
+
+.question__input::placeholder {
+  color: var(--tone-400);
+}
+
+.question__note {
+  margin: 0;
+  font-size: 0.82rem;
+  color: var(--ink-soft);
+}
+
+.question__saved {
+  padding: 14px 16px 8px;
+  border-radius: 18px;
+  background: var(--tone-100);
+}
+
+.question__saved-label {
+  margin: 0;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--tone-700);
+}
+
+.question__saved-answer {
+  margin: 6px 0 4px;
+  white-space: pre-line;
+  line-height: 1.5;
+}
+
+/* ---------- Vale ---------- */
+
+/* Cupón con dos muescas laterales, como los de papel. */
+.ticket {
+  position: relative;
+  padding: 18px 22px;
+  border-radius: 18px;
+  background:
+    radial-gradient(circle at 0 50%, transparent 12px, var(--tone-100) 12.5px) left / 51% 100% no-repeat,
+    radial-gradient(circle at 100% 50%, transparent 12px, var(--tone-100) 12.5px) right / 51% 100% no-repeat;
+  filter: drop-shadow(0 4px 8px rgb(var(--shadow-rgb) / 0.18));
+}
+
+.ticket::before {
+  content: '';
+  position: absolute;
+  inset: 7px 18px;
+  border: 2px dashed var(--tone-300);
+  border-radius: 12px;
+  pointer-events: none;
+}
+
+.ticket__label {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--tone-600);
+}
+
+.ticket__text {
+  position: relative;
+  margin: 8px 0 0;
+  font-size: 1.15rem;
+  font-weight: 600;
+  line-height: 1.4;
+  color: var(--ink);
+}
+
+.ticket--compact .ticket__text {
+  font-size: 1.05rem;
+}
+
+.ticket__answer {
+  position: relative;
+  margin: 12px 0 0;
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: var(--white);
+  font-style: italic;
+  line-height: 1.45;
+  white-space: pre-line;
+}
+
+.ticket__answer-label {
+  display: block;
+  margin-bottom: 4px;
+  font-style: normal;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--tone-700);
+}
+
+.ticket__hint {
+  position: relative;
+  margin: 8px 0 0;
+  font-size: 0.9rem;
+  color: var(--ink-soft);
+}
+
+.ticket__footer {
+  position: relative;
+  margin: 10px 0 0;
+  font-size: 0.78rem;
+  color: var(--ink-soft);
+}
+
+/* ---------- Rasca y gana ---------- */
+
+.scratch__cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+.scratch-card {
+  position: relative;
+  aspect-ratio: 3 / 4;
+  border-radius: 16px;
+  overflow: hidden;
+  border: 3px solid var(--white);
+  box-shadow: 0 4px 10px rgb(var(--shadow-rgb) / 0.2);
+  background: var(--tone-50);
+}
+
+.scratch-card__under {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 8px;
+  color: var(--tone-600);
+}
+
+.scratch-card__prize {
+  font-size: 0.78rem;
+  font-weight: 600;
+  line-height: 1.25;
+  color: var(--ink);
+}
+
+.scratch-card__number {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--tone-300);
+}
+
+.scratch-card__cover {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  touch-action: none;
+  cursor: grab;
+}
+
+.scratch-card--disabled .scratch-card__cover {
+  cursor: not-allowed;
+  opacity: 0.45;
+  filter: grayscale(0.3);
+}
+
+.scratch-card--revealed {
+  box-shadow:
+    0 0 0 3px var(--tone-500),
+    0 6px 16px rgb(var(--glow-rgb) / 0.4);
+  animation: pop-in 0.4s cubic-bezier(0.3, 1.5, 0.5, 1);
+}
+
+.scratch__help {
+  margin: 12px 0 0;
+  font-weight: 600;
+  color: var(--tone-700);
+}
+
+.scratch__prize .scratch__help {
+  margin-bottom: 10px;
+  font-family: var(--font-script);
+  font-size: 1.4rem;
+  font-weight: 400;
+}
+
+/* ---------- Test ---------- */
+
+.quiz {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  text-align: left;
+}
+
+.quiz__text {
+  display: flex;
+  gap: 8px;
+  margin: 0 0 10px;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.quiz__number {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--tone-500);
+  color: var(--white);
+  font-size: 0.8rem;
+}
+
+.quiz__options {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+}
+
+.quiz__option {
+  min-height: 46px;
+  padding: 8px 10px;
+  border: 2px solid var(--tone-200);
+  border-radius: 14px;
+  background: var(--white);
+  font-weight: 500;
+  color: var(--ink);
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease,
+    transform 0.1s ease;
+}
+
+.quiz__option:not(:disabled):active {
+  transform: scale(0.97);
+}
+
+.quiz__option:disabled {
+  cursor: default;
+}
+
+.quiz__option.is-correct {
+  border-color: var(--ok);
+  background: var(--ok);
+  color: var(--white);
+  font-weight: 600;
+}
+
+.quiz__option.is-wrong {
+  border-color: var(--bad);
+  background: var(--bad);
+  color: var(--white);
+  font-weight: 600;
+  animation: shake 0.45s ease;
+}
+
+.quiz__option.is-faded {
+  opacity: 0.5;
+}
+
+.quiz__feedback {
+  margin: 8px 0 0;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.quiz__feedback.is-correct {
+  color: var(--ok);
+}
+
+.quiz__feedback.is-wrong {
+  color: var(--bad);
+}
+
+.quiz__score {
+  margin: 0;
+  padding: 12px;
+  border-radius: 16px;
+  background: var(--tone-100);
+  text-align: center;
+  font-weight: 600;
+  color: var(--tone-800);
+}
+
+/* ---------- Crucigrama ---------- */
+
+.crossword {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+}
+
+.crossword__grid {
+  display: grid;
+  gap: 3px;
+  width: 100%;
+  max-width: 360px;
+}
+
+.crossword__empty {
+  aspect-ratio: 1;
+}
+
+.crossword__cell {
+  position: relative;
+  aspect-ratio: 1;
+  border-radius: 7px;
+  background: var(--white);
+  box-shadow:
+    inset 0 0 0 2px var(--tone-300),
+    0 2px 0 rgb(var(--shadow-rgb) / 0.12);
+}
+
+.crossword__cell.is-active {
+  background: var(--tone-100);
+  box-shadow:
+    inset 0 0 0 2px var(--tone-500),
+    0 2px 0 rgb(var(--shadow-rgb) / 0.12);
+}
+
+.crossword__cell.is-correct {
+  background: var(--ok-soft);
+  box-shadow: inset 0 0 0 2px var(--ok);
+}
+
+.crossword__cell.is-wrong {
+  background: var(--bad-soft);
+  box-shadow: inset 0 0 0 2px var(--bad);
+}
+
+.crossword__number {
+  position: absolute;
+  top: 1px;
+  left: 3px;
+  font-size: 0.55rem;
+  font-weight: 700;
+  color: var(--tone-700);
+  pointer-events: none;
+}
+
+.crossword__input {
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  text-align: center;
+  text-transform: uppercase;
+  /* 16px como mínimo: así el iPhone no hace zoom al escribir. */
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--ink);
+  caret-color: var(--tone-600);
+  outline: none;
+}
+
+.crossword__input:disabled {
+  color: var(--ok);
+  opacity: 1;
+  -webkit-text-fill-color: var(--ok);
+}
+
+.crossword__solved {
+  margin: 0;
+  font-weight: 600;
+  color: var(--ok);
+}
+
+.crossword__clues {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  text-align: left;
+}
+
+.crossword__clues-title {
+  margin: 0 0 6px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--tone-700);
+}
+
+.crossword__clue-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.crossword__clue {
+  display: flex;
+  gap: 8px;
+  width: 100%;
+  padding: 8px 10px;
+  border: 0;
+  border-radius: 12px;
+  background: var(--tone-50);
+  text-align: left;
+  font-size: 0.92rem;
+  line-height: 1.4;
+}
+
+.crossword__clue.is-active {
+  background: var(--tone-100);
+  box-shadow: inset 0 0 0 2px var(--tone-400);
+}
+
+.crossword__clue-number {
+  flex: none;
+  font-weight: 700;
+  color: var(--tone-700);
+}
+
+.crossword__clue-length {
+  color: var(--ink-soft);
+  white-space: nowrap;
+}
+
+.question__sent {
+  margin: 0 0 4px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--ok);
+}
+
+.question__sent {
+  margin: 0 0 4px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--ok);
+}

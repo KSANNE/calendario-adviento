@@ -1,0 +1,52 @@
+{
+  "year": 2026,
+  "totalDays": 7,
+  "welcome": {
+    "title": "¡Hola!",
+    "message": "Tu calendario de adviento empieza el 1 de diciembre."
+  },
+  "days": {
+    "1": {
+      "kind": "note",
+      "title": "Una nota",
+      "message": "Texto de la nota. Los saltos de línea se escriben así:\nsegunda línea."
+    },
+    "2": {
+      "kind": "song",
+      "title": "Canción del día",
+      "message": "Por qué has elegido esta canción.",
+      "song": { "name": "Nombre", "artist": "Artista", "spotify": "track/0000000000000000000000" }
+    },
+    "3": {
+      "kind": "question",
+      "title": "Pregunta del día",
+      "question": "¿Pregunta abierta? La respuesta se guarda en su móvil."
+    },
+    "4": {
+      "kind": "voucher",
+      "title": "¡Un vale!",
+      "voucher": "Vale por el plan que me dijiste el día 3",
+      "answerFromDay": 3
+    },
+    "5": {
+      "kind": "scratch",
+      "title": "Rasca y gana",
+      "message": "Solo puedes rascar una.",
+      "prizes": ["Premio 1", "Premio 2", "Premio 3"]
+    },
+    "6": {
+      "kind": "quiz",
+      "title": "Test",
+      "questions": [{ "question": "¿Pregunta?", "options": ["Mal", "Bien"], "correct": 1 }]
+    },
+    "7": {
+      "kind": "crossword",
+      "title": "Crucigrama",
+      "words": [
+        { "answer": "Sol", "clue": "Estrella", "row": 0, "col": 0, "direction": "across" },
+        { "answer": "Sal", "clue": "Condimento", "row": 0, "col": 0, "direction": "down" }
+      ],
+      "closing": "Despedida opcional (vale para cualquier tipo)"
+    }
+  }
+}

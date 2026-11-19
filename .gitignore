@@ -1,0 +1,7 @@
+node_modules
+dist
+*.local
+# Las sorpresas en claro NUNCA se suben: solo el archivo cifrado public/calendario.enc.json.
+contenido/sorpresas.json
+# Configuración local de herramientas
+.claude/
